@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenta acertar tudo, ceguinha😝</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background-color: #121212;
+            color: #00ffcc;
+            margin: 0;
+            padding: 0;
+        }
+        .game-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1e1e1e;
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(0, 255, 204, 0.6);
+        }
+        input {
+            padding: 10px;
+            width: 80%;
+            margin: 10px 0;
+            border: none;
+            background: #ffc100;
+            color: #ffffff;
+            border-radius: 5px;
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            background: #00ffcc;
+            color: #121212;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #00cc99;
+        }
+        .progress-container {
+            width: 100%;
+            background: #333;
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 20px;
+            width: 0%;
+            background: #22ff00;
+            transition: width 0.5s ease-in-out;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            color: black;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.5s;
+        }
+        .popup-success {
+            background: #00ffcc;
+        }
+        .popup-error {
+            background: #ff4444;
+        }
+        #final-popup {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #00ffcc;
+            color: black;
+            padding: 20px;
+            border-radius: 10px 10px 0 0;
+            font-size: 18px;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Tenta acertar tudo, ceguinha😝</h1>
+        <p>As perguntas estão fáceis, eu acho kasdhaskjdhs</p>
+        <div id="challenge"></div>
+        <input type="text" id="answer" placeholder="Digite sua resposta">
+        <button id="submit">Enviar</button>
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        <p id="score">Pontuação: 0</p>
+    </div>
+
+    <div id="popup" class="popup"></div>
+    <div id="final-popup">Fofa! Acertou tudinho em! Agora, faça a tradução do código em base64, e me mande uma mensagem com a resposta. Código: <strong>UXVhbmRvIHF1ZSBldSB2b3UgZG9ybWlyIG5vIHNldSBxdWFydG8/</strong></div>
+
+    <script>
+        const challenges = [
+            { question: "Vá no Google e pesquise por 'JP, 032-8272' e responda abaixo o nome da cidade que aparece", answer: "Hirosaki" },
+            { question: "Use um site para decodificar essse código em base64 'RXUgc291IGRyYW3DoXRpY2E=' e responda com o resultado", answer: "Eu sou dramática" },
+            { question: "Ande por esse endereço '-19.8446974,-43.9285399' no Google Maps, e procure por um ônibus azul, e responda qual o destino que aparece no visor", answer: "Guarani" },
+            { question: "Procure por esse perfil '@javascript.js' no ig. Encontre o post onde tem um relógio e diga a porcetagem de bateria que aparece no código", answer: "79%" },
+            { question: "Qual temperatura em 03:00 da manhã em Belo Horizonte?", answer: "19" },
+            { question: "Procure por esse perfil no Twitter '@SakuraLoverAiko' e diga a data que aparece no primeiro post da conta", answer: "2021" },
+            { question: "Entre no Plato, clique em jogos, e diga qual o nome do primeiro jogo que aparece", answer: "Ocho" }
+        ];
+
+        let currentChallenge = 0;
+        let score = 0;
+        const challengeElement = document.getElementById("challenge");
+        const answerInput = document.getElementById("answer");
+        const submitButton = document.getElementById("submit");
+        const scoreElement = document.getElementById("score");
+        const popup = document.getElementById("popup");
+        const finalPopup = document.getElementById("final-popup");
+        const progressBar = document.getElementById("progress-bar");
+
+        function loadChallenge() {
+            challengeElement.textContent = challenges[currentChallenge].question;
+            answerInput.value = "";
+        }
+
+        function showPopup(message, success) {
+            popup.textContent = message;
+            popup.className = `popup ${success ? 'popup-success' : 'popup-error'}`;
+            popup.style.display = "block";
+            setTimeout(() => { popup.style.display = "none"; }, 2000);
+        }
+
+        function updateProgress() {
+            let progress = (currentChallenge / challenges.length) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        submitButton.addEventListener("click", () => {
+            if (answerInput.value.toLowerCase() === challenges[currentChallenge].answer.toLowerCase()) {
+                showPopup("Correto!", true);
+                score += 10;
+                scoreElement.textContent = `Pontuação: ${score}`;
+                currentChallenge++;
+                updateProgress();
+                if (currentChallenge < challenges.length) {
+                    setTimeout(loadChallenge, 1000);
+                } else {
+                    finalPopup.style.display = "block";
+                }
+            } else {
+                showPopup("Errado! Tente novamente.", false);
+            }
+        });
+
+        loadChallenge();
+    </script>
+</body>
+</html>
